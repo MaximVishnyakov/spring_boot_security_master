@@ -65,18 +65,6 @@ public class User implements UserDetails {
         return surname;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, surname);
-    }
 
     public void setSurname(String surname) {
         this.surname = surname;
@@ -116,5 +104,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname);
     }
 }

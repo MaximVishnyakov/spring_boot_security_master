@@ -55,8 +55,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userDAO.findByUsername(username);
         user.getAuthorities().size();
-        if (user == null){
-            throw  new UsernameNotFoundException(String.format("User '%s' не найден", username));
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User '%s' не найден", username));
         }
 
         return user;

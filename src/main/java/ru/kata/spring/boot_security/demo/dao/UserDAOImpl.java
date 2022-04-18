@@ -50,6 +50,6 @@ public class UserDAOImpl implements UserDAO {
     public User findByUsername(String username) {
         Query query = em.createQuery("Select e FROM User e WHERE e.username = :username");
         query.setParameter("username", username);
-        return (User)query.getSingleResult();
+        return (User) query.getSingleResult();
     }
 }

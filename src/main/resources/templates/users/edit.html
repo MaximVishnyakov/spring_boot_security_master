@@ -11,7 +11,6 @@
 <div class="container mt-5 mb-5">
     <div th:each="user : ${user}">
         <h1>Редактирование пользователя: <p th:text="${user.getId()}"></p></h1>
-
         <form th:method="patch" th:action="'/' + ${user.getId()}">
             <input type="text" th:value="${user.getName()}" name="name" placeholder="Введите имя пользователя"
                    class="form-control"><br>
