@@ -17,8 +17,7 @@
     <input type="text" th:field="*{username}" id="username"/>
     <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Error username</div>
     <br/>
-    <label for="roles">Права доступа</label>
-       <input type="text" th:field="*{roles}" id="roles"/>
+
     <input type="submit" value="Сохранить"/>
 </form>
 
