@@ -1,11 +1,11 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -15,18 +15,14 @@ public class UserDAOImpl implements UserDAO {
     private EntityManager em;
 
     @Override
-    public List<User> index() {
-        List<User> users = em.createQuery("SELECT a FROM User a", User.class)
-                .getResultList();
-        return users;
+    @SuppressWarnings("unchecked")
+    public List<User> getAllUsers() {
+        return em.createQuery("from User").getResultList();
     }
 
     @Override
-    public User show(long id) {
-        User user = em.find(User.class, id);
-        em.detach(user);
-
-        return user;
+    public User getUserById(long id) {
+        return em.find(User.class, id);
     }
 
     @Override
@@ -35,21 +31,35 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void update(long id, User updateUser) {
-        em.merge(updateUser);
+    public void update(long id, User updatedUser) {
+        em.merge(updatedUser);
     }
 
     @Override
     public void delete(long id) {
-        Query query = em.createQuery("delete from User where id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        em.createQuery("delete from User user where user.id = ?1")
+                .setParameter(1, id)
+                .executeUpdate();
     }
 
     @Override
-    public User findByUsername(String username) {
-        Query query = em.createQuery("Select e FROM User e WHERE e.username = :username");
-        query.setParameter("username", username);
-        return (User) query.getSingleResult();
+    public User getUserByUsername(String username) {
+        System.out.println((User) em.createQuery("from User user where user.username = ?1")
+                .setParameter(1, username)
+                .getSingleResult());
+
+        return (User) em.createQuery("from User user where user.username = ?1")
+                .setParameter(1, username)
+                .getSingleResult();
+    }
+
+    @Override
+    public void addRoleToUser(User user, Role role) {
+
+        em.createQuery("insert into User user = ?1 (roles) select role from Role role where role = ?2")
+                .setParameter(1, user)
+                .setParameter(2, role)
+                .executeUpdate();
     }
 }
+

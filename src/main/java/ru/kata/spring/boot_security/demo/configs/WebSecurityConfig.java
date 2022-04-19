@@ -4,56 +4,62 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class    WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final SuccessUserHandler successUserHandler;
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private UserService userService;
+
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsServiceImpl userDetailsServiceImpl) {
+    public WebSecurityConfig(UserService userService, SuccessUserHandler successUserHandler) {
+        this.userService = userService;
         this.successUserHandler = successUserHandler;
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.authorizeRequests()
-                .antMatchers("/edit/**", "/new", "/delete/**", "/admin")
-                .hasRole("ADMIN")
-                .antMatchers("/show/**", "/user")
-                .hasAnyRole("ADMIN", "USER")
-                .antMatchers("/", "/login")
-                .permitAll()
+        http
+                .authorizeRequests()
+                .antMatchers("/user").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/admin").hasAuthority("ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .successHandler(successUserHandler)
+                .formLogin().successHandler(successUserHandler)
+                .permitAll()
                 .and()
                 .logout()
                 .permitAll();
-
-    }
-
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsServiceImpl);
-        return authenticationProvider;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    protected DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        return daoAuthenticationProvider;
     }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> userService.getUserByUsername(username);
+    }
+
+    @Bean
+    protected PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+
 }

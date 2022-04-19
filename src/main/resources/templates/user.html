@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <title>My Profile</title>
+</head>
+<body>
+<table class="table-dark">
+    <thead>
+    <tr class="table-dark">
+        <th scope="col">Имя</th>
+        <th scope="col">Фамилия</th>
+        <th scope="col">Username</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${user.getName()}"/>
+        <td th:text="${user.getSurname()}"/>
+        <td th:text="${user.getUsername()}"/>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<br/>
+<hr/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign out"/>
+</form>
+</body>
+</html>

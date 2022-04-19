@@ -9,23 +9,23 @@ import ru.kata.spring.boot_security.demo.dao.UserDAO;
 
 import javax.transaction.Transactional;
 
-@Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+//@Service
+public class UserDetailsServiceImpl {//implements UserDetailsService {
 
-    private final UserDAO userDAO;
-
-    @Autowired
-    public UserDetailsServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user =  userDAO.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("User '%s' не найден", username));
-        }
-        return user;
-    }
+//    private final UserDAO userDAO;
+//
+//    @Autowired
+//    public UserDetailsServiceImpl(UserDAO userDAO) {
+//        this.userDAO = userDAO;
+//    }
+//
+//    @Override
+//    @Transactional
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        UserDetails user =  userDAO.findByUsername(username);
+//        if (user == null) {
+//            throw new UsernameNotFoundException(String.format("User '%s' не найден", username));
+//        }
+//        return user;
+//    }
 }
