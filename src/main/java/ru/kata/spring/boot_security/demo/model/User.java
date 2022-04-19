@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import jdk.jfr.DataAmount;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -7,10 +8,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +22,19 @@ public class User implements UserDetails {
 
     private String name;
     private String surname;
+    @Column(unique = true)
     private String username;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
 
     @Transient
     private String password = "root";
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles"
+            , joinColumns = @JoinColumn(name = "users_id")
+            , inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    private Set<Role> roles = new HashSet<>();
+
 
     public User() {
 
@@ -71,6 +80,18 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 
     @Override

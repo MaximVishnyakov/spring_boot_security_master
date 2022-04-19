@@ -42,5 +42,9 @@ public class RoleDAOImpl implements RoleDAO {
                 .executeUpdate();
     }
 
-
+    @Override
+    public Role getRoleByName(String role) {
+        return em.createQuery("from Role r where r.role =:role", Role.class
+        ).setParameter("role", role).getSingleResult();
+    }
 }

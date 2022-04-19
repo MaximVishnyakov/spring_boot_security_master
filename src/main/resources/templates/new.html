@@ -16,8 +16,16 @@
     <label for="username">Username</label>
     <input type="text" th:field="*{username}" id="username"/>
     <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Error username</div>
-    <br/>
-
+    <br>
+    <br>
+    <select size="2" name="nameRoles" multiple>
+        <option th:each="role : ${roles}"
+                th:value="${role.role}"
+                th:text="${role.getRole()}">
+        </option>
+    </select>
+    <br>
+    <br>
     <input type="submit" value="Сохранить"/>
 </form>
 

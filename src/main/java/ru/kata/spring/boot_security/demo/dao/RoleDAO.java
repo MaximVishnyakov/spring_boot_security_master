@@ -6,9 +6,15 @@ import java.util.List;
 import java.util.Set;
 
 public interface RoleDAO {
-     Set<Role> getAllRoles();
-     Role getRoleById(int id);
-     void save(Role role);
-     void update(int id, Role updatedRole);
-     void delete(int id);
+    Set<Role> getAllRoles();
+
+    Role getRoleById(int id);
+
+    void save(Role role);
+
+    void update(int id, Role updatedRole);
+
+    void delete(int id);
+
+    public Role getRoleByName(String role);
 }

@@ -10,5 +10,6 @@ public interface RoleService {
     void save(Role role);
     void update(int id, Role updatedRole);
     void delete(int id);
+    public Role getRoleByName(String role);
 }
 
